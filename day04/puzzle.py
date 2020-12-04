@@ -67,10 +67,9 @@ def passports(file):
             yield passport
             passport = {}
         else:
-            elems = [elem for elem in line.split()]
             fields = dict([
                 tuple(elem.split(':'))
-                for elem in elems
+                for elem in line.split()
             ])
             passport |= fields
 
