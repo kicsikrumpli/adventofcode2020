@@ -147,13 +147,16 @@ def count_inwards(bags: Dict[str, List[Tuple[str, int]]], start: str):
     :return: number of bags inside
     """
     count = 0
-    for bag, n in bags.get(start):
+    for bag, n in (contents for contents in bags.get(start, [])):
         count += n + n * count_inwards(bags=bags, start=bag)
 
     return count
 
 
 if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
+
     with open('input.txt', 'rt') as puzzle:
         inverted_index = invert_index(make_index(puzzle))
 
