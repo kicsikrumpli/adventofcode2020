@@ -246,13 +246,21 @@ if __name__ == '__main__':
         for line in puzzle:
             starting_patch.append([c for c in line.strip()])
 
-    starting_space = [starting_patch]
+    starting_space = [[starting_patch]]
 
     cycles = 6
     space = starting_space
 
-    for _ in range(cycles):
-        space = step(space)
+    # for _ in range(cycles):
+    #     space = step(space)
 
-    print(f'number of active cells after {cycles} cycles:', count_active(space))
+    space = [[
+        ['.', '#', '.'],
+        ['.', '.', '#'],
+        ['#', '#', '#'],
+    ]]
+    pprint(space)
+    pprint(step(space))
+
+    #print(f'number of active cells after {cycles} cycles:', count_active(space))
 
