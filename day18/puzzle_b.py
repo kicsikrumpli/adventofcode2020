@@ -59,6 +59,7 @@ def rewrite(tokens: List[Token]):
 
         if not tokens:
             if operator_stack:
+                # out of tokens, lets process stack
                 *operator_stack, op = operator_stack
                 left, right, *number_stack = number_stack
                 val = apply(op, left, right)
@@ -74,22 +75,22 @@ def rewrite(tokens: List[Token]):
                 *operator_stack, op = operator_stack
                 *number_stack, left, right = number_stack
                 val = apply(op, left, right)
-                number_stack = [*number_stack, val]
+                tokens = [val, *tokens]  # put rewritten high precedence op back as token
         elif token is Symbol.Plus:
             operator_stack = [*operator_stack, token]
         elif token is Symbol.Asterisk:
             operator_stack = [*operator_stack, token]
         elif token is Symbol.OpenParen:
             # print('> OPEN (')
-            _tokens, _, _number_stack = do_rewrite(tokens, [], [])
-            tokens = [*_number_stack, *_tokens]
+            _tokens, _, _number_stack = do_rewrite(tokens, [], [])  # rewrite expression in parens
+            tokens = [*_number_stack, *_tokens]  # put rewritten parenthesis back as token
             # print('< OPEN (')
         elif token is Symbol.CloseParen:
             # print('> CLOSE )')
-            _tokens = tokens
-            _, _, _number_stack = do_rewrite([], operator_stack, number_stack)
+            _tokens = tokens  # consumed tokens until close paren
+            _, _, _number_stack = do_rewrite([], operator_stack, number_stack)  # force processing of stack
             # print('< CLOSE )')
-            return tokens, _, _number_stack  # back to open paren
+            return tokens, _, _number_stack  # send remaining tokens and stack result back to open paren
         else:
             pass
 
